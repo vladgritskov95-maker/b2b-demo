@@ -34,13 +34,15 @@
   --amber:#DFA24C; --amber-bg:#2A2013; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px rgba(0,0,0,.25); color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit}
 
-.app{max-width:540px;margin:0 auto;display:flex;flex-direction:column}
+/* высоту окна меряет JS (--appH): адресная строка и клавиатура её меняют */
+.app{max-width:540px;margin:0 auto;height:var(--appH,100vh);display:flex;flex-direction:column;overflow:hidden}
 
 /* ---------- верхняя панель как в продукте ---------- */
-.top{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--line)}
+.top{flex:0 0 auto;z-index:40;background:var(--surface);border-bottom:1px solid var(--line)}
 .top-in{display:flex;align-items:center;gap:10px;padding:8px 12px 6px}
 .logo{background:var(--navy);border-radius:11px;padding:8px 11px;display:flex;align-items:center;gap:8px;flex:0 0 auto}
 .logo .ico{width:20px;height:20px;border-radius:6px;background:var(--green);display:grid;place-items:center;font-size:11px;color:#fff;font-weight:700}
@@ -55,7 +57,7 @@ button,input,select,textarea{font-family:inherit}
 .roles button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px;font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .roles button[aria-pressed="true"]{background:var(--green-bg);border-color:var(--green-line);color:var(--green-d);font-weight:600}
 
-main{padding:12px 12px 96px}
+main{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px 12px 24px}
 
 /* панель-заголовок раздела */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow)}
@@ -188,7 +190,7 @@ textarea{min-height:74px;resize:vertical}
 .price3 .us span{color:rgba(255,255,255,.85)}
 
 /* нижняя навигация */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:540px;margin:0 auto;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));display:flex}
+.nav{flex:0 0 auto;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));display:flex}
 .nav button{flex:1;border:0;background:none;padding:6px 2px;font-size:10.5px;color:var(--muted);cursor:pointer;display:grid;gap:3px;justify-items:center;border-radius:10px}
 .nav button em{font-style:normal;font-size:16px;line-height:1}
 .nav button[aria-current="true"]{color:var(--green-d);font-weight:600}
@@ -269,7 +271,20 @@ textarea{min-height:74px;resize:vertical}
   function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2500)}
   function notify(t,s){S.notes.unshift({t:t,s:s,new:true});S.unread++;bellPaint();toast(t)}
   function bellPaint(){var b=document.getElementById('bellN');if(S.unread){b.hidden=false;b.textContent=S.unread}else b.hidden=true}
-  function go(sc,id){S.screen=sc;S.sel=id||null;render();window.scrollTo(0,0)}
+  function go(sc,id){S.screen=sc;S.sel=id||null;render();app.scrollTop=0}
+
+  // реальная высота видимой области: адресная строка и клавиатура её меняют
+  function fitApp(){
+    var h=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
+    document.documentElement.style.setProperty('--appH',Math.round(h)+'px');
+  }
+  fitApp();
+  window.addEventListener('resize',fitApp);
+  window.addEventListener('orientationchange',function(){setTimeout(fitApp,120)});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',fitApp);
+    window.visualViewport.addEventListener('scroll',fitApp);
+  }
 
   document.getElementById('bell').onclick=function(){S.unread=0;bellPaint();go('notes')};
   document.getElementById('rBuyer').onclick=function(){role('buyer')};
