@@ -1,0 +1,792 @@
+<title>Bereke B2B — демо</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#F4F6F7; --surface:#FFFFFF; --line:#E6EBEE; --line2:#D5DEE3;
+  --text:#111F2A; --muted:#6B8190; --soft:#8FA3B0;
+  --green:#00A859; --green-d:#008B4A; --green-bg:#E8F6EF; --green-line:#B6E3CD;
+  --navy:#0F2B3D; --amber:#A96B08; --amber-bg:#FDF4E3;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --shadow:0 1px 2px rgba(17,31,42,.04),0 6px 18px rgba(17,31,42,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#071018; --surface:#0E1F2B; --line:#1C3040; --line2:#26404F; --text:#E8F1F6; --muted:#8FA8B7; --soft:#6E8799;
+  --green:#00C46A; --green-d:#00A859; --green-bg:#0D2B21; --green-line:#1D4B39; --navy:#081A26;
+  --amber:#DFA24C; --amber-bg:#2A2013; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px rgba(0,0,0,.25); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#071018; --surface:#0E1F2B; --line:#1C3040; --line2:#26404F; --text:#E8F1F6; --muted:#8FA8B7; --soft:#6E8799;
+  --green:#00C46A; --green-d:#00A859; --green-bg:#0D2B21; --green-line:#1D4B39; --navy:#081A26;
+  --amber:#DFA24C; --amber-bg:#2A2013; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px rgba(0,0,0,.25); color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}
+
+.app{max-width:540px;margin:0 auto;display:flex;flex-direction:column}
+
+/* ---------- верхняя панель как в продукте ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:10px;padding:8px 12px 6px}
+.logo{background:var(--navy);border-radius:11px;padding:8px 11px;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.logo .ico{width:20px;height:20px;border-radius:6px;background:var(--green);display:grid;place-items:center;font-size:11px;color:#fff;font-weight:700}
+.logo b{color:#fff;font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.05;display:block}
+.logo b i{color:var(--green);font-style:normal}
+.logo span{display:block;font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:#7FA0B4;text-transform:uppercase;margin-top:1px}
+.tagdemo{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.1em;background:var(--amber-bg);color:var(--amber);padding:4px 7px;border-radius:6px;font-weight:700}
+.bell{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;position:relative;font-size:14px}
+.bell i{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--green);color:#fff;font-size:10px;font-style:normal;font-weight:700;display:grid;place-items:center;padding:0 4px;border:2px solid var(--surface)}
+.bell i[hidden]{display:none}
+.roles{display:flex;gap:6px;padding:0 12px 8px}
+.roles button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px;font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.roles button[aria-pressed="true"]{background:var(--green-bg);border-color:var(--green-line);color:var(--green-d);font-weight:600}
+
+main{padding:12px 12px 96px}
+
+/* панель-заголовок раздела */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow)}
+.panel::after{content:"";position:absolute;right:-42px;top:-42px;width:130px;height:130px;border-radius:50%;background:var(--green-bg)}
+.panel>*{position:relative;z-index:1}
+.eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);display:block;margin-bottom:7px}
+.panel h1{font-size:21px;font-weight:700;letter-spacing:-.02em;margin:0;display:flex;align-items:center;gap:8px}
+.panel h1 em{font-style:normal;color:var(--green)}
+.panel p{margin:8px 0 0;font-size:13.5px;color:var(--muted);max-width:44ch}
+
+h2{font-size:15px;font-weight:700;margin:16px 0 8px;letter-spacing:-.01em}
+.hint{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+/* KPI как в продукте — с цветной верхней кромкой */
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kpi div{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--green);border-radius:12px;padding:12px 13px;box-shadow:var(--shadow)}
+.kpi div.b{border-top-color:var(--navy)}
+.kpi b{display:block;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi span{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+
+/* карточки */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:9px;box-shadow:var(--shadow)}
+.card.tap{cursor:pointer;transition:transform .15s,border-color .2s}
+.card.tap:active{transform:scale(.995)}
+.card.acc{border-left:3px solid var(--green)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.row b{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.meta{font-size:12.5px;color:var(--muted);margin-top:5px}
+.badge{font-size:11px;font-weight:600;padding:4px 9px;border-radius:7px;background:var(--green-bg);color:var(--green-d);white-space:nowrap;flex:0 0 auto}
+.badge.a{background:var(--amber-bg);color:var(--amber)}
+.badge.n{background:var(--bg);color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* кнопки */
+.btn{width:100%;border:0;border-radius:12px;background:var(--green);color:#fff;font-weight:600;font-size:15px;padding:13px;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:disabled{opacity:.4}
+.btn.sec{background:var(--surface);color:var(--text);border:1px solid var(--line2);font-weight:500}
+.btn.sm{padding:10px;font-size:13.5px}
+.btn.dash{background:transparent;border:1px dashed var(--line2);color:var(--muted);font-weight:500}
+.btn.nav-link{background:var(--navy);color:#fff}
+
+label.f{display:block;font-size:10.5px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:12px 0 6px}
+input,select,textarea{width:100%;border:1px solid var(--line2);background:var(--surface);color:var(--text);border-radius:11px;padding:12px;font-size:15px}
+input[type=range]{accent-color:var(--green);padding:0;border:0;background:none}
+textarea{min-height:74px;resize:vertical}
+.split2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.back{background:none;border:0;color:var(--muted);font-size:13px;padding:0 0 8px;cursor:pointer}
+.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:24px 10px;background:var(--surface);border:1px dashed var(--line2);border-radius:14px}
+.sep{height:1px;background:var(--line);margin:14px 0}
+.list-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.list-row:last-child{border-bottom:0}
+.list-row span{color:var(--muted)}
+.list-row b{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+.hl{background:var(--navy);color:#fff;border-radius:14px;padding:15px;margin-top:10px}
+.hl small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#87AEC4;margin-bottom:5px}
+.hl b{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.hl .m{font-size:12.5px;color:#9FC0D2;margin-top:6px}
+
+/* разбор заявки */
+.parse{background:var(--green-bg);border:1px solid var(--green-line);border-radius:14px;padding:14px}
+.parse b{font-size:14px;display:block;margin-bottom:4px}
+.parse p{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.parse textarea{min-height:60px;background:var(--surface)}
+.ex{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ex button{border:1px solid var(--green-line);background:var(--surface);color:var(--green-d);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+.fields{display:grid;gap:7px;margin-top:12px}
+.fld{display:flex;justify-content:space-between;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 13px;opacity:.4;transform:translateY(5px);transition:.35s}
+.fld.on{opacity:1;transform:none;border-color:var(--green-line)}
+.fld span{font-size:10.5px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.fld b{font-size:14px;text-align:right;font-weight:600}
+.fld b.no{color:var(--soft);font-weight:400}
+
+/* предложения */
+.offer{border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:9px;background:var(--surface);position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.offer.sel{border-color:var(--green);background:var(--green-bg)}
+.offer .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(0,168,89,.09);transition:width .45s}
+.offer>*{position:relative}
+.offer .pr{font-family:var(--mono);font-weight:700;color:var(--green-d);font-size:13.5px;white-space:nowrap}
+.stepper{display:flex;align-items:center;gap:8px;margin-top:10px}
+.stepper button{width:38px;height:38px;flex:0 0 auto;border-radius:10px;border:1px solid var(--line2);background:var(--surface);font-size:18px;cursor:pointer;color:var(--text)}
+.stepper .val{flex:1;text-align:center;font-family:var(--mono);font-weight:700;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:9px 6px;background:var(--bg)}
+.check{width:100%;margin-top:8px;border:1px solid var(--line2);background:var(--surface);border-radius:10px;padding:9px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.check.ok{border-color:var(--green-line);background:var(--green-bg);color:var(--green-d);font-weight:600}
+
+.pay{display:grid;gap:7px;margin-top:8px}
+.pay button{text-align:left;border:1px solid var(--line2);background:var(--surface);border-radius:12px;padding:12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--text)}
+.pay button[aria-pressed="true"]{border-color:var(--green);background:var(--green-bg)}
+.pay b{font-size:14px;font-weight:600;display:block}
+.pay span{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+.pay .tick{color:var(--green);font-weight:700;font-size:16px}
+
+/* этапы и документы */
+.stage{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.stage:last-child{border-bottom:0}
+.stage i{width:24px;height:24px;border-radius:50%;border:2px solid var(--line2);flex:0 0 auto;font-style:normal;display:grid;place-items:center;font-size:11px;color:var(--muted);font-weight:600}
+.stage.done i{background:var(--green);border-color:var(--green);color:#fff}
+.stage b{font-size:14px;font-weight:600;display:block}
+.stage span{font-size:12.5px;color:var(--muted)}
+.doc{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.doc:last-child{border-bottom:0}
+.doc b{font-size:14px;font-weight:500}
+.doc button{border:1px solid var(--line2);background:var(--surface);border-radius:9px;padding:8px 12px;font-size:12.5px;cursor:pointer;color:var(--text);white-space:nowrap}
+.doc .ok{color:var(--green-d);font-size:12.5px;font-weight:600;white-space:nowrap}
+
+/* метки совпадения */
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;background:var(--green-bg);color:var(--green-d);border-radius:7px;padding:4px 8px;font-weight:600}
+.tag.n{background:var(--bg);color:var(--muted);font-weight:400}
+
+/* уведомления */
+.note{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.note:last-child{border-bottom:0}
+.note i{width:8px;height:8px;border-radius:50%;background:var(--green);flex:0 0 auto;margin-top:6px}
+.note i.read{background:var(--line2)}
+.note b{font-size:14px;font-weight:600;display:block}
+.note span{font-size:12.5px;color:var(--muted)}
+
+/* о платформе */
+.acc-item{background:var(--surface);border:1px solid var(--line);border-radius:13px;margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow)}
+.acc-item>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:none;border:0;padding:14px;cursor:pointer;text-align:left;color:var(--text)}
+.acc-item>button b{font-size:14.5px;font-weight:600}
+.acc-item>button i{font-style:normal;color:var(--green);font-size:19px;transition:transform .25s;flex:0 0 auto}
+.acc-item.open>button i{transform:rotate(45deg)}
+.acc-item p{margin:0;padding:0 14px 14px;font-size:13.5px;color:var(--muted)}
+.price3{display:grid;gap:8px;margin-top:10px}
+.price3 div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px}
+.price3 div.us{background:var(--green);border-color:var(--green);color:#fff}
+.price3 b{display:block;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.price3 span{font-size:12.5px;color:var(--muted);display:block;margin-top:4px}
+.price3 .us span{color:rgba(255,255,255,.85)}
+
+/* нижняя навигация */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:540px;margin:0 auto;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));display:flex}
+.nav button{flex:1;border:0;background:none;padding:6px 2px;font-size:10.5px;color:var(--muted);cursor:pointer;display:grid;gap:3px;justify-items:center;border-radius:10px}
+.nav button em{font-style:normal;font-size:16px;line-height:1}
+.nav button[aria-current="true"]{color:var(--green-d);font-weight:600}
+
+.toast{pointer-events:none;position:fixed;left:50%;transform:translateX(-50%) translateY(14px);bottom:84px;background:var(--navy);color:#fff;padding:12px 16px;border-radius:12px;font-size:13.5px;z-index:60;opacity:0;transition:.28s;max-width:min(460px,92vw);box-shadow:0 12px 30px rgba(0,0,0,.24)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal{position:fixed;inset:0;background:rgba(6,20,30,.5);z-index:70;display:grid;place-items:end center}
+.sheet{background:var(--surface);width:100%;max-width:540px;border-radius:18px 18px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom,0px));max-height:86vh;overflow:auto}
+.paper{border:1px solid var(--line);border-radius:12px;padding:14px;font-size:12.5px;background:var(--bg)}
+.paper .t{font-weight:700;font-size:14px;margin-bottom:8px}
+.paper table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.paper td{padding:5px 0;border-bottom:1px solid var(--line)}
+.paper td:last-child{text-align:right;font-family:var(--mono)}
+.sign{margin-top:10px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="top-in">
+      <div class="logo"><span class="ico">₸</span><span><b>Bereke <i>B2B</i></b><span>биржа закупок</span></span></div>
+      <span class="tagdemo">ДЕМО</span>
+      <button class="bell" id="bell" aria-label="Уведомления">🔔<i id="bellN" hidden>0</i></button>
+    </div>
+    <div class="roles">
+      <button type="button" id="rBuyer" aria-pressed="true">🛒 Заказчик</button>
+      <button type="button" id="rSeller" aria-pressed="false">📦 Поставщик</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <nav class="nav" id="nav"></nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var F=new Intl.NumberFormat('ru-RU');
+  function money(v){return F.format(Math.round(v))+' ₸'}
+  function num(v){return F.format(Math.round(v))}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  var PHONE='77052151127';
+
+  var TERMS=[{l:'Прямая оплата',s:'без удорожания',rate:0,m:0},
+             {l:'Овердрафт 30 дней',s:'удорожание 1,0 %',rate:.01,m:1},
+             {l:'Факторинг 3 месяца',s:'удорожание 2,4 %',rate:.024,m:3},
+             {l:'Факторинг 6 месяцев',s:'удорожание 4,9 %',rate:.049,m:6}];
+
+  var S={
+    role:'buyer', screen:'exchange', sel:null, notes:[], unread:0, cart:[],
+    checkout:{term:2,dp:20}, rawText:'',
+    form:{name:'',cat:'Стройматериалы',vol:'',unit:'шт',reg:'',due:''},
+    rfqs:[
+      {id:'r1',name:'Цемент М400',cat:'Стройматериалы',vol:400,unit:'т',reg:'Алматы',due:'до 30.10.2026',status:'collecting',
+       offers:[{co:'ТОО «ТаразПак»',price:31000,cap:220,days:14,del:'самовывоз',rate:'★ 4,6 · 12 сделок',bnpl:true,take:0,checked:false},
+               {co:'ТОО «МеталлТрейд KZ»',price:34500,cap:180,days:10,del:'доставка',rate:'★ 4,2 · 7 сделок',bnpl:true,take:0,checked:false},
+               {co:'ТОО «КазСтройРесурс»',price:36000,cap:120,days:7,del:'доставка',rate:'новый поставщик',bnpl:false,take:0,checked:false}]},
+      {id:'r2',name:'Капитальный ремонт офиса',cat:'Ремонт и отделка',vol:250,unit:'м²',reg:'Астана',due:'до 15.11.2026',status:'ordered',offers:[]}
+    ],
+    orders:[{id:'o1',name:'Капитальный ремонт офиса',co:'ТОО «МеталлТрейд KZ»',sum:6000000,pay:'Прямая оплата',
+      stages:[{n:'Аванс 30 %',s:1800000,done:true},{n:'Выполнение 40 %',s:2400000,done:false},{n:'Финальная приёмка 30 %',s:1800000,done:false}],
+      docs:{dog:true,spec:true,esf:false}}],
+    incoming:[
+      {id:'i1',name:'Кладка стен из кирпича или блоков',cat:'Строительно-монтажные работы',vol:400,unit:'м³',reg:'Астана',co:'ТОО «АгроХим Актобе»',due:'до 13.10.2026',match:['точное совпадение','ваш регион','объём в диапазоне'],answered:false},
+      {id:'i2',name:'Цемент М300',cat:'Стройматериалы',vol:150,unit:'т',reg:'Алматы',co:'ТОО «СтройДом KZ»',due:'до 28.09.2026',match:['точное совпадение','объём в диапазоне'],answered:false},
+      {id:'i3',name:'Дизельное топливо',cat:'ГСМ',vol:1000,unit:'л',reg:'Костанай',co:'ТОО «Нефтепродукт Ко»',due:'до 01.10.2026',match:['смежная категория'],answered:false}
+    ],
+    demand:[
+      {n:'Цемент М300',c:'Стройматериалы',v:150,u:'т',r:'Алматы'},
+      {n:'Арматура А500С, 12 мм',c:'Стройматериалы',v:40,u:'т',r:'Костанай'},
+      {n:'Дизельное топливо',c:'ГСМ',v:2000,u:'л',r:'Караганда'},
+      {n:'Косметический ремонт офиса',c:'Ремонт и отделка',v:150,u:'м²',r:'СКО'},
+      {n:'Обслуживание вентиляции',c:'Техобслуживание',v:12,u:'мес',r:'Караганда'},
+      {n:'Круглосуточная охрана объекта',c:'Охрана',v:12,u:'мес',r:'Атырау'}
+    ]
+  };
+
+  var app=document.getElementById('app'), nav=document.getElementById('nav');
+  function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2500)}
+  function notify(t,s){S.notes.unshift({t:t,s:s,new:true});S.unread++;bellPaint();toast(t)}
+  function bellPaint(){var b=document.getElementById('bellN');if(S.unread){b.hidden=false;b.textContent=S.unread}else b.hidden=true}
+  function go(sc,id){S.screen=sc;S.sel=id||null;render();window.scrollTo(0,0)}
+
+  document.getElementById('bell').onclick=function(){S.unread=0;bellPaint();go('notes')};
+  document.getElementById('rBuyer').onclick=function(){role('buyer')};
+  document.getElementById('rSeller').onclick=function(){role('seller')};
+  function role(r){
+    S.role=r;
+    document.getElementById('rBuyer').setAttribute('aria-pressed',r==='buyer');
+    document.getElementById('rSeller').setAttribute('aria-pressed',r==='seller');
+    go(r==='buyer'?'exchange':'incoming');
+  }
+  var NAVS={buyer:[['exchange','🗂','Биржа'],['orders','📦','Заказы'],['about','✨','О платформе'],['cabinet','👤','Кабинет']],
+            seller:[['incoming','📨','Заявки'],['myoffers','📤','Мои КП'],['about','✨','О платформе'],['cabinet','👤','Кабинет']]};
+  function navPaint(){
+    nav.innerHTML='';
+    NAVS[S.role].forEach(function(n){
+      var b=document.createElement('button');b.type='button';b.innerHTML='<em>'+n[1]+'</em>'+n[2];
+      b.setAttribute('aria-current',S.screen===n[0]);b.onclick=function(){go(n[0])};nav.appendChild(b);
+    });
+  }
+
+  /* ====== публикация заявки: общий поток откликов ====== */
+  // ориентировочная рыночная цена за единицу — чтобы суммы в демо выглядели реально
+  var PRICE=[[/цемент/i,31000],[/арматур/i,340000],[/щебен|песок/i,9000],[/кирпич|блок/i,180],
+             [/дизел|солярк/i,315],[/бензин/i,285],[/селитр|удобрен|аммофос/i,185000],
+             [/кладк/i,14000],[/ремонт|отделк/i,26000],[/вентиляц|обслуживан/i,180000],
+             [/охран/i,420000],[/перевоз|доставк|логистик/i,95000]];
+  var BYUNIT={'т':85000,'кг':900,'л':320,'м²':24000,'м³':30000,'шт':12000,'мес':350000};
+  function unitPrice(name,unit){
+    for(var i=0;i<PRICE.length;i++)if(PRICE[i][0].test(name))return PRICE[i][1];
+    return BYUNIT[unit]||12000;
+  }
+  function publishRfq(r,quiet){
+    S.rfqs.unshift(r);
+    var base=unitPrice(r.name,r.unit);
+    var st=base>50000?500:(base>5000?100:(base>500?10:1));
+    function pr(k){return Math.round(base*k/st)*st}
+    var pool=[
+      {co:'ТОО «ТаразПак»',price:pr(.94),cap:Math.ceil(r.vol*.55),days:14,del:'самовывоз',rate:'★ 4,6 · 12 сделок',bnpl:true,take:0,checked:false},
+      {co:'ТОО «МеталлТрейд KZ»',price:pr(1.05),cap:Math.ceil(r.vol*.45),days:10,del:'доставка',rate:'★ 4,2 · 7 сделок',bnpl:true,take:0,checked:false},
+      {co:'ТОО «КазСтройРесурс»',price:pr(1.12),cap:Math.ceil(r.vol*.3),days:7,del:'доставка',rate:'новый поставщик',bnpl:false,take:0,checked:false}
+    ];
+    if(!quiet)notify('Заявка опубликована','«'+r.name+'» отправлена 3 профильным поставщикам');
+    pool.forEach(function(o,k){
+      setTimeout(function(){
+        r.offers.push(o);
+        notify('Новое предложение',o.co+' · '+num(o.price)+' ₸ за '+r.unit);
+        if((S.screen==='rfqwait'||S.screen==='rfq')&&S.sel===r.id)render();
+      },1500+k*1600);
+    });
+    return r;
+  }
+
+  /* ====== разбор текста заявки ====== */
+  var CATS=[
+    {c:'Стройматериалы',w:['цемент','арматур','кирпич','блок','щебен','песок','бетон','шифер','профнастил','доск','фанер','утеплит','гипсокартон','труб','плитк','краск']},
+    {c:'ГСМ',w:['дизел','бензин','топлив','гсм','масло','солярк','мазут']},
+    {c:'Сельхозхимия и удобрения',w:['селитр','удобрен','сзр','гербицид','аммофос','семен']},
+    {c:'Спецодежда и СИЗ',w:['спецодежд','сиз','перчатк','каск','ботинк','респиратор']},
+    {c:'Канцелярия и хозтовары',w:['канцеляр','бумаг','картридж','хозтовар','моющ']},
+    {c:'Мебель и оборудование',w:['мебел','стол','стул','шкаф','оборудован','станок','насос']},
+    {c:'Строительно-монтажные работы',w:['кладк','монтаж','строительн','фундамент','кровл','сварк','бетонн']},
+    {c:'Ремонт и отделка',w:['ремонт','отделк','покраск','штукатур','напольн']},
+    {c:'Техобслуживание',w:['обслуживан','вентиляц','кондиционер','сервис','наладк']},
+    {c:'Клининг и уборка',w:['уборк','клининг','химчистк','мойк']},
+    {c:'Грузоперевозки и логистика',w:['перевоз','доставк','логистик','фура','тягач','экспедиц']},
+    {c:'Охрана объектов',w:['охран','видеонаблюден','сигнализац']}
+  ];
+  var CATLIST=CATS.map(function(c){return c.c}).concat(['Прочее']);
+  var UNITLIST=['т','кг','л','м²','м³','м','шт','лист','компл','мес','км'];
+  var CITIES=['Алматы','Астана','Шымкент','Костанай','Караганда','Актобе','Павлодар','Атырау','Тараз','Семей','Актау','Уральск','Кокшетау','Петропавловск','Талдыкорган','Туркестан','Кызылорда','Усть-Каменогорск'];
+  var UNITS=[{u:'т',w:['тонн','тн','т']},{u:'кг',w:['килограмм','кг']},{u:'л',w:['литр','л']},
+             {u:'м²',w:['м2','м²','кв']},{u:'м³',w:['м3','м³','куб']},{u:'м',w:['погонн','метр','пм','м']},
+             {u:'шт',w:['штук','шт','единиц']},{u:'лист',w:['лист']},{u:'компл',w:['комплект','компл']},
+             {u:'мес',w:['месяц','мес']},{u:'км',w:['км','километр']}];
+  function parseRfq(t){
+    var src=t.replace(/ /g,' ');
+    var s=src.toLowerCase(), out={};
+
+    CATS.forEach(function(c){if(!out.cat)c.w.forEach(function(w){if(!out.cat&&s.indexOf(w)>-1)out.cat=c.c})});
+    CITIES.forEach(function(c){if(!out.reg&&s.indexOf(c.toLowerCase().slice(0,Math.max(5,c.length-2)))>-1)out.reg=c});
+
+    var mv=s.match(/(\d[\d\s]{0,9})\s*(тонн[а-я]*|тн|килограмм[а-я]*|кг|литр[а-я]*|м2|м²|кв\.?\s?м[а-я]*|м3|м³|куб[а-я]*|погонн[а-я]*|метр[а-я]*|пм|штук[а-я]*|шт|единиц[а-я]*|лист[а-я]*|комплект[а-я]*|компл|месяц[а-я]*|мес|километр[а-я]*|км|т|л|м)(?![а-яa-z])/);
+    if(mv){
+      out.vol=parseInt(mv[1].replace(/\s/g,''),10);
+      var token=mv[2], best=0;
+      UNITS.forEach(function(u){u.w.forEach(function(w){
+        if(token.indexOf(w)===0&&w.length>best){best=w.length;out.unit=u.u}
+      })});
+      if(!out.unit)out.unit='шт';
+    }
+
+    // наименование — всё до первого распознанного объёма, иначе до первой запятой
+    var cut=mv?mv.index:-1;
+    var name=(cut>0?src.slice(0,cut):src.split(/[,;]/)[0]).replace(/[\s,;·-]+$/,'').trim();
+    if(name.length>54)name=name.slice(0,54).replace(/\s\S*$/,'');
+    if(name)out.name=name.charAt(0).toUpperCase()+name.slice(1);
+
+    // срок: «до 20.10.2026», «до конца месяца», «через 3 дня», «за неделю»
+    var md=s.match(/до\s+(конца\s+месяца|конца\s+недели|\d{1,2}[.\s/]\d{1,2}[.\s/]?\d{0,4}|\d{1,2}\s+[а-я]+)/);
+    if(md)out.due='до '+md[1].trim();
+    else{
+      var mc=s.match(/через\s+(\d{1,3})\s*(дн|недел|мес)/);
+      if(mc){
+        var n=parseInt(mc[1],10), mult=mc[2]==='недел'?7:(mc[2]==='мес'?30:1);
+        var d=new Date(); d.setDate(d.getDate()+n*mult);
+        out.due='до '+d.toLocaleDateString('ru-RU');
+      }
+    }
+    return out;
+  }
+
+  /* ====== экраны ====== */
+  var AFTER={}, SCREENS={};
+
+  SCREENS.exchange=function(){
+    var mine=S.rfqs.map(function(r){
+      var st=r.status==='collecting'?'<span class="badge a">собирает предложения</span>':'<span class="badge">заказ размещён</span>';
+      return '<div class="card tap acc" data-go="'+(r.status==='collecting'&&r.offers.length<3?'rfqwait':'rfq')+'" data-id="'+r.id+'">'+
+        '<div class="row"><b>'+esc(r.name)+'</b>'+st+'</div>'+
+        '<div class="meta">'+num(r.vol)+' '+r.unit+' · '+esc(r.reg)+' · '+esc(r.due)+'</div>'+
+        '<div class="meta">'+(r.status==='ordered'?'заявка закрыта заказом':(r.offers.length?('предложений: '+r.offers.length):'ждём отклики поставщиков'))+'</div></div>';
+    }).join('');
+    return '<div class="panel"><span class="eyebrow">Биржа · ИП «Глория», Костанай</span><h1><em>⇄</em> Заявки на закупку</h1>'+
+      '<p>Публикуете, что нужно. Профильные поставщики отвечают ценой, банк финансирует сделку на любом шаге.</p></div>'+
+      '<div class="kpi"><div><b>47</b><span>заявок на бирже</span></div><div class="b"><b>'+S.rfqs.length+'</b><span>ваши заявки</span></div></div>'+
+      '<button class="btn" data-go="new">+ Опубликовать заявку</button>'+
+      '<button class="btn sec" data-go="catalog">Каталог спроса</button>'+
+      '<h2>Мои заявки</h2>'+mine;
+  };
+
+  SCREENS['new']=function(){
+    var f=S.form;
+    function opts(list,cur){return list.map(function(v){return '<option'+(v===cur?' selected':'')+'>'+esc(v)+'</option>'}).join('')}
+    return '<button class="back" data-go="exchange">← Биржа</button>'+
+      '<div class="panel"><span class="eyebrow">Новая заявка</span><h1>Что нужно закупить</h1>'+
+      '<p>Заполните поля сами или опишите заявку одной строкой — платформа разложит её по полям, а вы поправите.</p></div>'+
+      '<div class="parse"><b>Описать одной строкой</b><p>В продукте это же можно надиктовать голосом.</p>'+
+      '<textarea id="raw" placeholder="цемент М500 в биг-бегах, 300 тонн, Костанай, через 10 дней">'+esc(S.rawText||'')+'</textarea>'+
+      '<div class="ex"><button data-ex="цемент М400 в биг-бегах, 400 тонн, Алматы, до конца месяца">пример: цемент</button>'+
+      '<button data-ex="дизельное топливо 2000 литров, Караганда">пример: ГСМ</button>'+
+      '<button data-ex="кладка стен из блоков 400 м3, Астана">пример: работы</button></div>'+
+      '<button class="btn sm" id="parseBtn">Разложить по полям</button></div>'+
+      '<label class="f" for="fName">Наименование</label>'+
+      '<input id="fName" placeholder="Например: цемент М500 в биг-бегах" value="'+esc(f.name)+'">'+
+      '<label class="f" for="fCat">Категория</label>'+
+      '<select id="fCat">'+opts(CATLIST,f.cat)+'</select>'+
+      '<div class="split2">'+
+      '<div><label class="f" for="fVol">Объём</label><input id="fVol" class="mono" inputmode="numeric" placeholder="150" value="'+(f.vol||'')+'"></div>'+
+      '<div><label class="f" for="fUnit">Единица</label><select id="fUnit">'+opts(UNITLIST,f.unit)+'</select></div></div>'+
+      '<label class="f" for="fReg">Регион</label>'+
+      '<input id="fReg" list="regList" placeholder="Костанай" value="'+esc(f.reg)+'">'+
+      '<datalist id="regList">'+CITIES.map(function(c){return '<option>'+c+'</option>'}).join('')+'</datalist>'+
+      '<label class="f" for="fDue">Срок поставки</label>'+
+      '<input id="fDue" placeholder="до 30.10.2026" value="'+esc(f.due)+'">'+
+      '<button class="btn" id="pub">Опубликовать заявку</button>'+
+      '<button class="btn dash sm" id="xls">📄 Загрузить список из Excel</button>'+
+      '<p class="hint">Заявку увидят только поставщики с подходящей категорией, регионом и объёмом. Можно сделать её адресной — тогда её увидит один выбранный поставщик.</p>';
+  };
+  AFTER['new']=function(){
+    var raw=document.getElementById('raw');
+    var F={name:'fName',cat:'fCat',vol:'fVol',unit:'fUnit',reg:'fReg',due:'fDue'};
+    function readForm(){
+      Object.keys(F).forEach(function(k){var el=document.getElementById(F[k]);if(el)S.form[k]=el.value});
+    }
+    Object.keys(F).forEach(function(k){
+      var el=document.getElementById(F[k]);
+      if(el)el.addEventListener('input',function(){S.form[k]=el.value});
+    });
+    app.querySelectorAll('[data-ex]').forEach(function(b){b.onclick=function(){raw.value=b.dataset.ex;raw.focus()}});
+
+    document.getElementById('parseBtn').onclick=function(){
+      var t=raw.value.trim(); if(!t){toast('Напишите заявку одной строкой или заполните поля вручную');return}
+      readForm();
+      var p=parseRfq(t);
+      // то, что заполнил прошлый разбор и чего нет в новом тексте, — очищаем
+      (S.fromParse||[]).forEach(function(k){if(!p[k])S.form[k]=(k==='unit'?'шт':(k==='cat'?'Прочее':''))});
+      var got=[];
+      Object.keys(p).forEach(function(k){if(p[k]){S.form[k]=p[k];got.push(k)}});
+      S.fromParse=got; S.rawText=t; render();
+      var flds=app.querySelectorAll('input,select');
+      flds.forEach(function(el,i){el.style.transition='none';el.style.borderColor='var(--green)';
+        setTimeout(function(){el.style.transition='border-color .5s';el.style.borderColor=''},400+i*90)});
+      var miss=['name','vol','reg'].filter(function(k){return !S.form[k]});
+      setTimeout(function(){toast(miss.length?'Разложили, что смогли — остальное заполните сами':'Разложили по полям — проверьте и публикуйте')},550);
+    };
+
+    document.getElementById('xls').onclick=function(){this.textContent='📄 Загружено: 5 строк → 5 заявок';toast('Каждая строка файла стала отдельной заявкой')};
+
+    document.getElementById('pub').onclick=function(){
+      readForm();
+      var f=S.form;
+      if(!f.name.trim()){toast('Укажите, что закупаете');document.getElementById('fName').focus();return}
+      var vol=parseInt(String(f.vol).replace(/\s/g,''),10);
+      if(!vol||vol<1){toast('Укажите объём числом');document.getElementById('fVol').focus();return}
+      var r={id:'r'+Date.now(),name:f.name.trim(),cat:f.cat||'Прочее',vol:vol,unit:f.unit||'шт',
+             reg:(f.reg||'Костанай').trim(),due:f.due.trim()||'до 30.10.2026',status:'collecting',offers:[]};
+      publishRfq(r);
+      S.form={name:'',cat:CATLIST[0],vol:'',unit:'шт',reg:'',due:''}; S.rawText='';
+      go('rfqwait',r.id);
+    };
+  };
+
+  SCREENS.rfqwait=function(){
+    var r=S.rfqs.filter(function(x){return x.id===S.sel})[0]; if(!r)return '';
+    if(r.offers.length>=3)return SCREENS.rfq();
+    return '<button class="back" data-go="exchange">← Биржа</button>'+
+      '<div class="panel"><span class="eyebrow">Заявка опубликована</span><h1>'+esc(r.name)+'</h1>'+
+      '<p>'+num(r.vol)+' '+r.unit+' · '+esc(r.reg)+' · '+esc(r.due)+'</p></div>'+
+      '<div class="kpi"><div><b>3</b><span>поставщика получили заявку</span></div><div class="b"><b>'+r.offers.length+'</b><span>предложений пришло</span></div></div>'+
+      (r.offers.length?r.offers.map(function(o){
+        return '<div class="card"><div class="row"><b>'+esc(o.co)+'</b><span class="pr">'+num(o.price)+' ₸/'+r.unit+'</span></div>'+
+        '<div class="meta">'+esc(o.del)+' · '+o.days+' дн. · до '+num(o.cap)+' '+r.unit+'</div><div class="meta">'+esc(o.rate)+'</div></div>';
+      }).join(''):'<div class="empty">Поставщики получили заявку и готовят предложения…</div>');
+  };
+
+  SCREENS.rfq=function(){
+    var r=S.rfqs.filter(function(x){return x.id===S.sel})[0]; if(!r)return '';
+    if(r.status==='ordered')return '<button class="back" data-go="exchange">← Биржа</button>'+
+      '<div class="panel"><span class="eyebrow">Заявка закрыта</span><h1>'+esc(r.name)+'</h1><p>По заявке размещён заказ.</p></div>'+
+      '<button class="btn" data-go="orders">Открыть заказы</button>';
+    if(r.offers.length<3)return SCREENS.rfqwait();
+    var taken=r.offers.reduce(function(a,o){return a+o.take},0), sum=r.offers.reduce(function(a,o){return a+o.take*o.price},0);
+    var list=r.offers.map(function(o,i){
+      return '<div class="offer'+(o.take>0?' sel':'')+'"><span class="fill" style="width:'+(o.take/o.cap*100)+'%"></span>'+
+        '<div class="row"><b>'+esc(o.co)+'</b><span class="pr">'+num(o.price)+' ₸/'+r.unit+'</span></div>'+
+        '<div class="meta">'+esc(o.del)+' · '+o.days+' дн. · до '+num(o.cap)+' '+r.unit+' · '+(o.bnpl?'с финансированием':'только прямая оплата')+'</div>'+
+        '<div class="meta">'+esc(o.rate)+'</div>'+
+        '<div class="stepper"><button data-dec="'+i+'">−</button><div class="val">'+num(o.take)+' '+r.unit+'</div><button data-inc="'+i+'">+</button></div>'+
+        '<button class="check'+(o.checked?' ok':'')+'" data-check="'+i+'">'+(o.checked?'✓ Контрагент проверен':'Проверить контрагента')+'</button></div>';
+    }).join('');
+    return '<button class="back" data-go="exchange">← Биржа</button>'+
+      '<div class="panel"><span class="eyebrow">Предложения · '+r.offers.length+'</span><h1>'+esc(r.name)+'</h1>'+
+      '<p>'+num(r.vol)+' '+r.unit+' · '+esc(r.reg)+' · '+esc(r.due)+'</p></div>'+
+      '<div class="kpi"><div><b>'+num(taken)+'/'+num(r.vol)+'</b><span>распределено, '+r.unit+'</span></div>'+
+      '<div class="b"><b>'+(taken?num(sum/taken):'—')+'</b><span>средняя цена, ₸/'+r.unit+'</span></div></div>'+
+      '<button class="btn sec sm" id="auto">⚡ Разложить автоматически</button>'+
+      '<h2>Предложения поставщиков</h2>'+list+
+      '<div class="hl"><small>Сумма закупки</small><b>'+money(sum)+'</b><div class="m">Цена считается по фактически взятому у каждого объёму</div></div>'+
+      '<button class="btn" id="toCheckout"'+(taken?'':' disabled')+'>Перейти к оформлению</button>';
+  };
+  AFTER['rfq']=function(){
+    var r=S.rfqs.filter(function(x){return x.id===S.sel})[0]; if(!r)return;
+    var step=Math.max(1,Math.round(r.vol*.1));
+    function left(){return r.vol-r.offers.reduce(function(a,o){return a+o.take},0)}
+    app.querySelectorAll('[data-inc]').forEach(function(b){b.onclick=function(){
+      var o=r.offers[+b.dataset.inc]; o.take=Math.min(o.cap,o.take+Math.min(step,Math.max(0,left()))); render()}});
+    app.querySelectorAll('[data-dec]').forEach(function(b){b.onclick=function(){
+      var o=r.offers[+b.dataset.dec]; o.take=Math.max(0,o.take-step); render()}});
+    app.querySelectorAll('[data-check]').forEach(function(b){b.onclick=function(){
+      var o=r.offers[+b.dataset.check]; if(o.checked)return;
+      b.textContent='Проверяем по реестрам…';
+      setTimeout(function(){o.checked=true;render();toast('✓ '+o.co+': компания действующая, в стоп-листах не числится')},900);
+    }});
+    var a=document.getElementById('auto');
+    if(a)a.onclick=function(){
+      var order=r.offers.map(function(o,i){return i}).sort(function(x,y){return r.offers[x].price-r.offers[y].price});
+      r.offers.forEach(function(o){o.take=0});
+      var rest=r.vol; order.forEach(function(i){var o=r.offers[i];o.take=Math.min(o.cap,rest);rest-=o.take});
+      render(); toast('Объём разложен по лучшей цене');
+    };
+    var t=document.getElementById('toCheckout');
+    if(t)t.onclick=function(){go('checkout',r.id)};
+  };
+
+  SCREENS.checkout=function(){
+    var r=S.rfqs.filter(function(x){return x.id===S.sel})[0]; if(!r)return '';
+    var sum=r.offers.reduce(function(a,o){return a+o.take*o.price},0);
+    var allB=r.offers.every(function(o){return o.take===0||o.bnpl});
+    if(!allB&&S.checkout.term>0)S.checkout.term=0;
+    var t=TERMS[S.checkout.term], p=S.checkout.dp/100;
+    var down=t.m?sum*p:sum, base=sum-down, fee=base*t.rate, bank=base+fee, pay=t.m?bank/t.m:sum;
+    var pays=TERMS.map(function(x,i){
+      var dis=!allB&&x.m>0;
+      return '<button type="button" data-term="'+i+'" aria-pressed="'+(i===S.checkout.term)+'"'+(dis?' disabled style="opacity:.45"':'')+'>'+
+        '<span><b>'+x.l+'</b><span>'+(dis?'недоступно: в сделке поставщик без финансирования':x.s)+'</span></span>'+
+        (i===S.checkout.term?'<span class="tick">✓</span>':'')+'</button>';
+    }).join('');
+    var sched='';
+    if(t.m)for(var k=0;k<t.m;k++){var d=new Date(2026,9+k,25);sched+='<div class="list-row"><span>'+(k+1)+'. '+d.toLocaleDateString('ru-RU')+'</span><b>'+money(pay)+'</b></div>'}
+    return '<button class="back" data-go="rfq" data-id="'+r.id+'">← К предложениям</button>'+
+      '<div class="panel"><span class="eyebrow">Оформление</span><h1>Сделка и оплата</h1>'+
+      '<p>'+esc(r.name)+' · '+num(r.offers.reduce(function(a,o){return a+o.take},0))+' '+r.unit+'</p></div>'+
+      '<h2>Способ оплаты</h2><div class="pay">'+pays+'</div>'+
+      (t.m?'<label class="f">Первоначальный взнос — '+S.checkout.dp+' %</label><input type="range" id="dp" min="0" max="50" step="5" value="'+S.checkout.dp+'" style="padding:0;border:0;background:none">':'')+
+      '<div class="card" style="margin-top:10px">'+
+      '<div class="list-row"><span>Сумма закупки</span><b>'+money(sum)+'</b></div>'+
+      (t.m?'<div class="list-row"><span>Первоначальный взнос</span><b>'+money(down)+'</b></div>'+
+        '<div class="list-row"><span>Удорожание</span><b>'+money(fee)+'</b></div>'+
+        '<div class="list-row"><span>Финансирует банк</span><b>'+money(bank)+'</b></div>':'')+
+      '<div class="list-row"><span>'+(t.m>1?'Ежемесячно × '+t.m:(t.m===1?'Платёж через 30 дней':'К оплате сразу'))+'</span><b>'+money(pay)+'</b></div></div>'+
+      (sched?'<h2>График платежей</h2><div class="card">'+sched+'</div>':'')+
+      '<div class="hl"><small>Поставщик получит</small><b>'+money(sum)+'</b><div class="m">сразу после подтверждения поставки — отсрочку даёт банк</div></div>'+
+      '<button class="btn" id="place">Разместить заказ</button>';
+  };
+  AFTER['checkout']=function(){
+    var r=S.rfqs.filter(function(x){return x.id===S.sel})[0]; if(!r)return;
+    app.querySelectorAll('[data-term]').forEach(function(b){b.onclick=function(){if(!b.disabled){S.checkout.term=+b.dataset.term;render()}}});
+    var dp=document.getElementById('dp');
+    if(dp)dp.oninput=function(){S.checkout.dp=+dp.value;render();var n=document.getElementById('dp');if(n){n.focus()}};
+    document.getElementById('place').onclick=function(){
+      var sum=r.offers.reduce(function(a,o){return a+o.take*o.price},0);
+      var co=r.offers.filter(function(o){return o.take>0}).map(function(o){return o.co}).join(', ');
+      S.orders.unshift({id:'o'+Date.now(),name:r.name,co:co,sum:sum,pay:TERMS[S.checkout.term].l,
+        stages:[{n:'Отгрузка и приёмка',s:sum,done:false}],docs:{dog:false,spec:false,esf:false}});
+      r.status='ordered'; notify('Заказ размещён',co+' · '+money(sum)); go('orders');
+    };
+  };
+
+  SCREENS.orders=function(){
+    if(!S.orders.length)return '<div class="panel"><span class="eyebrow">Заказы</span><h1>Пока пусто</h1></div>';
+    return '<div class="panel"><span class="eyebrow">Заказы</span><h1>Мои заказы</h1><p>Этапы приёмки, документы и оплата по каждой сделке.</p></div>'+
+      S.orders.map(function(o){
+        var d=o.stages.filter(function(s){return s.done}).length;
+        return '<div class="card tap acc" data-go="order" data-id="'+o.id+'"><div class="row"><b>'+esc(o.name)+'</b>'+
+          '<span class="badge'+(d===o.stages.length?'':' a')+'">'+(d===o.stages.length?'закрыт':'в работе')+'</span></div>'+
+          '<div class="meta">'+esc(o.co)+' · '+money(o.sum)+'</div>'+
+          '<div class="meta">'+esc(o.pay)+' · принято этапов: '+d+' из '+o.stages.length+'</div></div>';
+      }).join('');
+  };
+
+  SCREENS.order=function(){
+    var o=S.orders.filter(function(x){return x.id===S.sel})[0]; if(!o)return '';
+    return '<button class="back" data-go="orders">← Заказы</button>'+
+      '<div class="panel"><span class="eyebrow">Заказ</span><h1>'+esc(o.name)+'</h1><p>'+esc(o.co)+' · '+money(o.sum)+'</p></div>'+
+      '<div class="card"><div class="row"><b>Оплата</b><span class="badge n">'+esc(o.pay)+'</span></div>'+
+      '<div class="meta">'+(o.pay==='Прямая оплата'?'Кредитный лимит не занят. Финансирование можно подключить до первой отгрузки.':'Финансирование оформлено, график платежей сформирован.')+'</div></div>'+
+      '<h2>Этапы приёмки</h2><div class="card">'+o.stages.map(function(s,i){
+        return '<div class="stage'+(s.done?' done':'')+'"><i>'+(s.done?'✓':i+1)+'</i><div style="flex:1"><b>'+esc(s.n)+'</b><span>'+money(s.s)+'</span>'+
+        (!s.done&&(i===0||o.stages[i-1].done)?'<button class="btn sec sm" data-accept="'+i+'">Принять этап</button>':'')+'</div></div>';
+      }).join('')+'</div>'+
+      '<h2>Документы</h2><div class="card">'+
+      '<div class="doc"><b>Договор поставки</b>'+(o.docs.dog?'<span class="ok">подписан</span>':'<button data-doc="dog">Сформировать</button>')+'</div>'+
+      '<div class="doc"><b>Спецификация</b>'+(o.docs.spec?'<button data-open="spec">Открыть</button>':'<button data-doc="spec">Сформировать</button>')+'</div>'+
+      '<div class="doc"><b>Счёт-фактура (ЭСФ)</b>'+(o.docs.esf?'<button data-open="esf">Открыть</button>':'<button data-doc="esf">Сформировать</button>')+'</div></div>';
+  };
+  AFTER['order']=function(){
+    var o=S.orders.filter(function(x){return x.id===S.sel})[0]; if(!o)return;
+    app.querySelectorAll('[data-accept]').forEach(function(b){b.onclick=function(){
+      var i=+b.dataset.accept;o.stages[i].done=true;notify('Этап принят',o.stages[i].n+' · '+money(o.stages[i].s));render()}});
+    app.querySelectorAll('[data-doc]').forEach(function(b){b.onclick=function(){
+      var k=b.dataset.doc;b.textContent='Формируем…';
+      setTimeout(function(){o.docs[k]=true;render();toast('Документ сформирован и подписан в системе')},700)}});
+    app.querySelectorAll('[data-open]').forEach(function(b){b.onclick=function(){openDoc(b.dataset.open,o)}});
+  };
+
+  SCREENS.catalog=function(){
+    return '<button class="back" data-go="exchange">← Биржа</button>'+
+      '<div class="panel"><span class="eyebrow">Каталог спроса</span><h1>Что заказывают другие</h1>'+
+      '<p>Обезличенная витрина реальных заявок площадки — без имён заказчиков и цен. Соберите нужное в корзину и опубликуйте своей заявкой.</p></div>'+
+      S.demand.map(function(d,i){
+        var inC=S.cart.indexOf(i)>-1;
+        return '<div class="card"><div class="row"><b>'+esc(d.n)+'</b><span class="badge n">'+esc(d.c)+'</span></div>'+
+          '<div class="meta">'+num(d.v)+' '+d.u+' · '+esc(d.r)+'</div>'+
+          '<button class="btn sm '+(inC?'sec':'')+'" data-cart="'+i+'">'+(inC?'✓ В корзине':'+ В корзину')+'</button></div>';
+      }).join('')+
+      (S.cart.length?'<button class="btn" id="fromCart">Опубликовать заявкой · '+S.cart.length+'</button>':'<p class="hint">Отметьте позиции — появится кнопка публикации.</p>');
+  };
+  AFTER['catalog']=function(){
+    app.querySelectorAll('[data-cart]').forEach(function(b){b.onclick=function(){
+      var i=+b.dataset.cart,p=S.cart.indexOf(i); if(p>-1)S.cart.splice(p,1); else S.cart.push(i); render()}});
+    var f=document.getElementById('fromCart');
+    if(f)f.onclick=function(){
+      var first=null, n=S.cart.length;
+      S.cart.slice().sort().forEach(function(i,k){
+        var d=S.demand[i];
+        var r={id:'c'+Date.now()+i,name:d.n,cat:d.c,vol:d.v,unit:d.u,reg:d.r,due:'до 30.10.2026',status:'collecting',offers:[]};
+        publishRfq(r,k>0); if(!first)first=r;
+      });
+      S.cart=[]; toast('Опубликовано заявок: '+n+' — поставщики уже получили их');
+      go('rfqwait',first.id);
+    };
+  };
+
+  SCREENS.incoming=function(){
+    return '<div class="panel"><span class="eyebrow">Подобрано для ТОО «ТаразПак»</span><h1><em>✦</em> Заявки под ваш профиль</h1>'+
+      '<p>Платформа сама отбирает заявки: категория, регион и объём должны совпасть с вашими. Искать ничего не нужно.</p></div>'+
+      '<div class="kpi"><div><b>'+S.incoming.filter(function(i){return !i.answered}).length+'</b><span>новых заявок</span></div>'+
+      '<div class="b"><b>'+S.incoming.filter(function(i){return i.answered}).length+'</b><span>вы ответили</span></div></div>'+
+      S.incoming.map(function(i){
+        return '<div class="card tap acc" data-go="offer" data-id="'+i.id+'"><div class="row"><b>'+esc(i.name)+'</b>'+
+          (i.answered?'<span class="badge">вы ответили</span>':'<span class="badge a">новая</span>')+'</div>'+
+          '<div class="meta">нужно '+num(i.vol)+' '+i.unit+' · '+esc(i.reg)+' · '+esc(i.due)+'</div>'+
+          '<div class="meta">'+esc(i.co)+'</div>'+
+          '<div class="tags">'+i.match.map(function(m){return '<span class="tag">✓ '+esc(m)+'</span>'}).join('')+'</div></div>';
+      }).join('');
+  };
+
+  SCREENS.offer=function(){
+    var i=S.incoming.filter(function(x){return x.id===S.sel})[0]; if(!i)return '';
+    return '<button class="back" data-go="incoming">← Заявки</button>'+
+      '<div class="panel"><span class="eyebrow">Заявка заказчика</span><h1>'+esc(i.name)+'</h1><p>'+esc(i.co)+' · '+esc(i.reg)+' · '+esc(i.due)+'</p></div>'+
+      '<div class="card"><div class="list-row"><span>Требуется</span><b>'+num(i.vol)+' '+i.unit+'</b></div>'+
+      '<div class="list-row"><span>Категория</span><b>'+esc(i.cat)+'</b></div>'+
+      '<div class="tags" style="margin-top:8px">'+i.match.map(function(m){return '<span class="tag">✓ '+esc(m)+'</span>'}).join('')+'</div></div>'+
+      (i.answered?'<div class="card"><div class="row"><b>Предложение отправлено</b><span class="badge">на рассмотрении</span></div><div class="meta">Заказчик сравнивает предложения. Вы получите уведомление о решении.</div></div>':
+      '<h2>Ваше предложение</h2>'+
+      '<div class="split2"><div><label class="f">Цена за '+i.unit+'</label><input id="oPrice" class="mono" value="31000" inputmode="numeric"></div>'+
+      '<div><label class="f">Закроете</label><input id="oCap" class="mono" value="'+i.vol+'" inputmode="numeric"></div></div>'+
+      '<label class="f">Срок поставки, дней</label><input id="oDays" class="mono" value="14" inputmode="numeric">'+
+      '<label class="f">Условия</label><textarea id="oNote" placeholder="Самовывоз со склада, отгрузка паллетами"></textarea>'+
+      '<div class="card" style="margin-top:10px"><div class="row"><b>Оплата через банк</b><span class="badge">включена</span></div>'+
+      '<div class="meta">Деньги придут сразу после подтверждения поставки. Отсрочку заказчику даёт банк — риск неоплаты на банке, а не на вас.</div></div>'+
+      '<button class="btn" id="sendOffer">Отправить предложение</button>');
+  };
+  AFTER['offer']=function(){
+    var i=S.incoming.filter(function(x){return x.id===S.sel})[0]; if(!i)return;
+    var b=document.getElementById('sendOffer');
+    if(b)b.onclick=function(){
+      i.answered=true; notify('Предложение отправлено',i.name+' · '+i.co); go('myoffers');
+    };
+  };
+
+  SCREENS.myoffers=function(){
+    var ans=S.incoming.filter(function(i){return i.answered});
+    return '<div class="panel"><span class="eyebrow">Мои предложения</span><h1>Отправленные КП</h1>'+
+      '<p>Статус по каждому предложению и отгрузки по выигранным сделкам.</p></div>'+
+      (ans.length?ans.map(function(i){
+        return '<div class="card acc"><div class="row"><b>'+esc(i.name)+'</b><span class="badge a">на рассмотрении</span></div>'+
+        '<div class="meta">'+esc(i.co)+' · '+num(i.vol)+' '+i.unit+'</div></div>';
+      }).join(''):'<div class="empty">Вы ещё не отвечали на заявки. Откройте раздел «Заявки».</div>')+
+      '<h2>Отгрузки</h2>'+
+      '<div class="card"><div class="row"><b>Цемент М400 · 220 т</b><span class="badge a">ожидает отгрузки</span></div>'+
+      '<div class="meta">ИП «Глория» · Алматы · до 07.10.2026</div>'+
+      '<div class="list-row" style="margin-top:8px"><span>К выплате после поставки</span><b>6 820 000 ₸</b></div>'+
+      '<button class="btn sm" id="shipBtn">Подтвердить отгрузку</button></div>';
+  };
+  AFTER['myoffers']=function(){
+    var b=document.getElementById('shipBtn');
+    if(b)b.onclick=function(){b.textContent='Отправляем в банк…';
+      setTimeout(function(){notify('Выплата от банка','6 820 000 ₸ зачислены на счёт');b.textContent='✓ Отгрузка подтверждена'},1000)};
+  };
+
+  SCREENS.about=function(){
+    var F=[['Заявка вместо обзвона','Публикуете, что нужно — и получаете предложения от профильных поставщиков. Не нужно искать их по доскам объявлений и в чатах.'],
+      ['Подбор по базе банка','Банк знает, кто чем торгует. Заявка доходит до тех, кто это продаёт, с отметками совпадения по категории, региону и объёму.'],
+      ['Сплит объёма','Ни один поставщик не закрывает крупную заявку целиком? Платформа разложит объём между несколькими, цена считается по фактически взятому.'],
+      ['Адресная заявка','Поставщик уже выбран — отправьте заявку только ему. Её больше никто не увидит.'],
+      ['Проверка контрагента','Перед отгрузкой или оплатой видно, с кем имеете дело. Проверка встроена в карточку предложения.'],
+      ['Рейтинг по сделкам','Каждая закрытая сделка идёт в историю компании. Репутация набирается работой, а не словами.'],
+      ['Работы и услуги по этапам','Ремонт, монтаж, подряд закрываются этапами: аванс, выполнение, финальная приёмка. Каждый этап принимается отдельно.'],
+      ['Документы внутри платформы','Договор, спецификация, график платежей и счёт-фактура формируются и подписываются здесь же.'],
+      ['Сотрудники с разными правами','Под компанией работает вся команда: снабженец публикует заявки, продавец отвечает, руководитель подписывает.'],
+      ['Финансирование в сделке','Овердрафт и факторинг подключаются кнопкой при оформлении: поставщик получает деньги сразу, покупатель платит по графику.'],
+      ['Расчёты в одной инфраструктуре','Счёт, оплата и поступление проходят внутри банка — без ожидания межбанковских переводов.'],
+      ['Приложение на Android','Заявки, предложения и сделки — с телефона, без компьютера.']];
+    return '<div class="panel"><span class="eyebrow">О платформе</span><h1>Что умеет Bereke B2B</h1>'+
+      '<p>Двенадцать вещей, из которых состоит платформа. Нажмите, чтобы раскрыть.</p></div>'+
+      '<div>'+F.map(function(f,i){return '<div class="acc-item" data-acc="'+i+'"><button type="button"><b>'+esc(f[0])+'</b><i>+</i></button><p hidden>'+esc(f[1])+'</p></div>'}).join('')+'</div>'+
+      '<h2>Сколько это стоит</h2>'+
+      '<div class="price3"><div><b>6–18 %</b><span>берут маркетплейсы с каждой вашей продажи. С 2026 года на комиссию сверху начисляется НДС.</span></div>'+
+      '<div><b>Подписка</b><span>за доступ к коммерческим торговым площадкам: без оплаты участвовать в закупках нельзя.</span></div>'+
+      '<div class="us"><b>0 ₸</b><span>участие на площадке банка: ни комиссии со сделки, ни платы за кабинет. Это часть бизнес-пакета.</span></div></div>'+
+      '<p class="hint">Источники: публичные тарифы маркетплейсов и торговых площадок РК, сентябрь 2026.</p>';
+  };
+  AFTER['about']=function(){
+    app.querySelectorAll('.acc-item').forEach(function(d){
+      d.querySelector('button').onclick=function(){var o=d.classList.toggle('open');d.querySelector('p').hidden=!o};
+    });
+  };
+
+  SCREENS.cabinet=function(){
+    var b=S.role==='buyer';
+    return '<div class="panel"><span class="eyebrow">Кабинет</span><h1>'+(b?'ИП «Глория»':'ТОО «ТаразПак»')+'</h1>'+
+      '<p>'+(b?'Костанай · закупки':'Тараз · поставки')+'</p></div>'+
+      '<div class="kpi">'+(b?'<div><b>45 000 000 ₸</b><span>доступный лимит</span></div><div class="b"><b>0 ₸</b><span>занято</span></div>'
+        :'<div><b>★ 4,6</b><span>рейтинг по сделкам</span></div><div class="b"><b>12</b><span>сделок выполнено</span></div>')+'</div>'+
+      '<h2>Сотрудники компании</h2>'+
+      '<div class="card"><div class="doc"><div><b>Владислав Г.</b><div class="meta">Руководитель · подписывает сделки</div></div><span class="badge">полный доступ</span></div>'+
+      '<div class="doc"><div><b>Айгуль С.</b><div class="meta">'+(b?'Снабжение · публикует заявки':'Продажи · отвечает на заявки')+'</div></div><span class="badge n">без подписи</span></div>'+
+      '<div class="doc"><div><b>Бухгалтерия</b><div class="meta">Документы и ЭСФ</div></div><span class="badge n">только просмотр</span></div></div>'+
+      '<div class="sep"></div><h2>Скажите, что думаете</h2>'+
+      '<p class="hint">Это демо. Напишите, чего не хватает — учтём в продукте.</p>'+
+      '<label class="f">Ваша компания</label><input id="fbCo" placeholder="ТОО «Ваша компания»">'+
+      '<label class="f">Как к вам обращаться</label><input id="fbName" placeholder="Имя">'+
+      '<label class="f">Чего не хватает и что добавить</label><textarea id="fbWish" placeholder="Например: интеграция с 1С, тендеры на услуги, рейтинг перевозчиков…"></textarea>'+
+      '<a class="btn" id="fbSend" href="#" style="text-decoration:none">Отправить в WhatsApp</a>'+
+      '<button class="btn sec" id="fbCopy">Скопировать ответ</button>'+
+      '<p class="hint">Грицков Владислав · Bereke Bank, филиал в Костанае · +7 705 215 11 27</p>';
+  };
+  AFTER['cabinet']=function(){
+    var co=document.getElementById('fbCo'),nm=document.getElementById('fbName'),ws=document.getElementById('fbWish'),
+        snd=document.getElementById('fbSend'),cp=document.getElementById('fbCopy');
+    function text(){var t='Bereke B2B — демо с конкурса «Делай Береке 4.0»\n';
+      if(nm.value.trim())t+='Имя: '+nm.value.trim()+'\n';
+      if(co.value.trim())t+='Компания: '+co.value.trim()+'\n';
+      if(ws.value.trim())t+='Пожелания: '+ws.value.trim()+'\n'; return t}
+    function upd(){snd.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(text())}
+    [co,nm,ws].forEach(function(e){e.addEventListener('input',upd)}); upd();
+    cp.onclick=function(){var s=text(),self=this;
+      function done(){self.textContent='Скопировано';setTimeout(function(){self.textContent='Скопировать ответ'},1500)}
+      try{navigator.clipboard.writeText(s).then(done,fb)}catch(e){fb()}
+      function fb(){var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(err){}document.body.removeChild(ta)}
+    };
+  };
+
+  SCREENS.notes=function(){
+    if(!S.notes.length)return '<div class="panel"><span class="eyebrow">Уведомления</span><h1>Пока пусто</h1></div>';
+    return '<div class="panel"><span class="eyebrow">Уведомления</span><h1>Что происходило</h1></div>'+
+      '<div class="card">'+S.notes.map(function(n){
+        return '<div class="note"><i class="'+(n.new?'':'read')+'"></i><div><b>'+esc(n.t)+'</b><span>'+esc(n.s)+'</span></div></div>'}).join('')+'</div>';
+  };
+
+  function openDoc(kind,o){
+    var m=document.createElement('div'); m.className='modal';
+    var title=kind==='spec'?'Спецификация':'Счёт-фактура (ЭСФ)';
+    m.innerHTML='<div class="sheet"><h2 style="margin-top:0">'+title+'</h2><div class="paper"><div class="t">'+title+' № 2026-'+String(o.id).slice(-4)+'</div>'+
+      '<table><tr><td>Заказчик</td><td>ИП «Глория»</td></tr><tr><td>Поставщик</td><td>'+esc(o.co)+'</td></tr>'+
+      '<tr><td>Предмет</td><td>'+esc(o.name)+'</td></tr><tr><td>Сумма с НДС</td><td>'+money(o.sum)+'</td></tr>'+
+      '<tr><td>в т.ч. НДС 16 %</td><td>'+money(o.sum*0.16/1.16)+'</td></tr><tr><td>Оплата</td><td>'+esc(o.pay)+'</td></tr></table>'+
+      '<div class="sign">Подписано в системе · отпечаток 8BD1231B4E3CDF463245E · 26.09.2026</div></div>'+
+      '<button class="btn sec" id="closeDoc">Закрыть</button></div>';
+    document.body.appendChild(m);
+    m.onclick=function(e){if(e.target===m||e.target.id==='closeDoc')document.body.removeChild(m)};
+  }
+
+  app.addEventListener('click',function(e){var t=e.target.closest('[data-go]');if(t)go(t.dataset.go,t.dataset.id)});
+  function render(){
+    // как только пришли все предложения — заявка перестаёт быть «в ожидании»
+    if(S.screen==='rfqwait'){
+      var w=S.rfqs.filter(function(x){return x.id===S.sel})[0];
+      if(w&&w.offers.length>=3)S.screen='rfq';
+    }
+    navPaint();
+    var f=SCREENS[S.screen]; app.innerHTML=f?f():'';
+    if(AFTER[S.screen])AFTER[S.screen]();
+  }
+
+  S.notes.push({t:'Добро пожаловать в демо',s:'Опубликуйте заявку и посмотрите, как отвечают поставщики',new:true});
+  S.unread=1; bellPaint(); render();
+})();
+</script>
