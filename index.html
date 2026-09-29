@@ -205,6 +205,22 @@ textarea{min-height:74px;resize:vertical}
 .paper td{padding:5px 0;border-bottom:1px solid var(--line)}
 .paper td:last-child{text-align:right;font-family:var(--mono)}
 .sign{margin-top:10px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.full{display:block;text-decoration:none;color:#fff;background:var(--navy);border-radius:16px;padding:16px 18px;margin:14px 0 4px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.full::after{content:"";position:absolute;right:-30px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:rgba(0,196,106,.16)}
+.full>*{position:relative;z-index:1}
+.full .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#2ED47E;display:block;margin-bottom:6px}
+.full b{display:block;font-size:16.5px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.full p{margin:6px 0 12px;font-size:13px;line-height:1.45;color:#B9CDD9}
+.full .go{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--green);color:#fff;border-radius:11px;padding:11px 14px;font-weight:700;font-size:14.5px}
+.full .dom{display:block;margin-top:8px;text-align:center;font-family:var(--mono);font-size:10.5px;color:#9FC0D2}
+.full.mini{display:flex;align-items:center;gap:12px;padding:13px 14px 13px 16px;margin:12px 0 4px}
+.full.mini .t{flex:1 1 auto;min-width:0}
+.full.mini .k{margin-bottom:3px}
+.full.mini b{font-size:15.5px}
+.full.mini small{display:block;font-family:var(--mono);font-size:10.5px;color:#9FC0D2;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.full.mini .arr{flex:0 0 auto;width:42px;height:42px;border-radius:12px;background:var(--green);display:grid;place-items:center;font-size:19px;font-weight:700;color:#fff}
+.full:active{transform:scale(.99)}
+.full:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 :focus-visible{outline:2px solid var(--green);outline-offset:2px}
 </style>
 
@@ -399,6 +415,22 @@ textarea{min-height:74px;resize:vertical}
   /* ====== экраны ====== */
   var AFTER={}, SCREENS={};
 
+  var FULL_URL='https://b2b-ecosystem.vercel.app/';
+  function fullLink(title){
+    return '<a class="full" href="'+FULL_URL+'" target="_blank" rel="noopener">'+
+      '<span class="k">Полная версия</span>'+
+      '<b>'+title+'</b>'+
+      '<p>Кабинеты заказчика и поставщика, сделки, документы, этапы работ и финансирование — всё, что не поместилось в демо.</p>'+
+      '<span class="go">Открыть полную версию <span>↗</span></span>'+
+      '<span class="dom">b2b-ecosystem.vercel.app</span></a>';
+  }
+
+  function fullMini(){
+    return '<a class="full mini" href="'+FULL_URL+'" target="_blank" rel="noopener">'+
+      '<span class="t"><span class="k">Это демо · полная версия</span><b>Открыть всю платформу</b>'+
+      '<small>b2b-ecosystem.vercel.app</small></span><span class="arr">↗</span></a>';
+  }
+
   SCREENS.exchange=function(){
     var mine=S.rfqs.map(function(r){
       var st=r.status==='collecting'?'<span class="badge a">собирает предложения</span>':'<span class="badge">заказ размещён</span>';
@@ -412,6 +444,7 @@ textarea{min-height:74px;resize:vertical}
       '<div class="kpi"><div><b>47</b><span>заявок на бирже</span></div><div class="b"><b>'+S.rfqs.length+'</b><span>ваши заявки</span></div></div>'+
       '<button class="btn" data-go="new">+ Опубликовать заявку</button>'+
       '<button class="btn sec" data-go="catalog">Каталог спроса</button>'+
+      fullMini()+
       '<h2>Мои заявки</h2>'+mine;
   };
 
@@ -663,6 +696,7 @@ textarea{min-height:74px;resize:vertical}
       '<p>Платформа сама отбирает заявки: категория, регион и объём должны совпасть с вашими. Искать ничего не нужно.</p></div>'+
       '<div class="kpi"><div><b>'+S.incoming.filter(function(i){return !i.answered}).length+'</b><span>новых заявок</span></div>'+
       '<div class="b"><b>'+S.incoming.filter(function(i){return i.answered}).length+'</b><span>вы ответили</span></div></div>'+
+      fullMini()+
       S.incoming.map(function(i){
         return '<div class="card tap acc" data-go="offer" data-id="'+i.id+'"><div class="row"><b>'+esc(i.name)+'</b>'+
           (i.answered?'<span class="badge">вы ответили</span>':'<span class="badge a">новая</span>')+'</div>'+
@@ -737,7 +771,8 @@ textarea{min-height:74px;resize:vertical}
       '<div class="price3"><div><b>6–18 %</b><span>берут маркетплейсы с каждой вашей продажи. С 2026 года на комиссию сверху начисляется НДС.</span></div>'+
       '<div><b>Подписка</b><span>за доступ к коммерческим торговым площадкам: без оплаты участвовать в закупках нельзя.</span></div>'+
       '<div class="us"><b>0 ₸</b><span>участие на площадке банка: ни комиссии со сделки, ни платы за кабинет. Это часть бизнес-пакета.</span></div></div>'+
-      '<p class="hint">Источники: публичные тарифы маркетплейсов и торговых площадок РК, сентябрь 2026.</p>';
+      '<p class="hint">Источники: публичные тарифы маркетплейсов и торговых площадок РК, сентябрь 2026.</p>'+
+      fullLink('Посмотрите всё это в работе');
   };
   AFTER['about']=function(){
     app.querySelectorAll('.acc-item').forEach(function(d){
